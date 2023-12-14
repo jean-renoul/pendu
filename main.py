@@ -34,9 +34,10 @@ def menu():
     global pseudo_input
     
     menu = pygame_menu.Menu('Bienvenue', 800, 800, theme = pygame_menu.themes.THEME_BLUE)
-    pseudo_input = menu.add.text_input('Name :', default="")
+    pseudo_input = menu.add.text_input('Pseudo :', default="")
     difficultee = menu.add.selector('Difficultée :', [('Facile', 1), ('Normale', 2), ('Difficile', 3)])
     mot_a_ajouter = menu.add.text_input ('Entrez un mot à ajouter : ')
+    menu.add.button ('Tableau des scores', scoreboard)
     menu.add.button ('Jouer', jeu)
     menu.add.button('Quitter', pygame_menu.events.EXIT)
 
@@ -86,7 +87,6 @@ def changer_difficultee():
 
 def fonction_score():
     pseudo = pseudo_input.get_value()
-    replaced_content = ""
 
     if difficultee_selectionnee == ('Facile',1):
         with open('scores.txt', 'a+') as f:
@@ -98,6 +98,20 @@ def fonction_score():
         with open('scores.txt', 'a+') as f:
             print (pseudo, ": ", scores + 3, file=f)
         
+def scoreboard():
+    status = True
+    while (status):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                status = False
+        with open ('scores.txt', 'r') as f:
+            scores = f.read().splitlines()
+            scores = str(scores)
+            texte_score = font.render (scores, True, (0,0,0))
+        screen.fill((255,255,255))
+        screen.blit (texte_score, (0, 50))
+        pygame.display.flip()
+
 
 def jeu():
     global essai
@@ -106,9 +120,9 @@ def jeu():
     global mots
     global scores
 
+
     ajouter_mot()
     changer_difficultee()
-    pseudo = pseudo_input.get_value()
     texte_3 = font.render ("Vous avez gagné !", True, (255,255,255))
     texte_4 = font.render ("Vous avez perdu ...", True, (255,255,255))
 
@@ -123,7 +137,6 @@ def jeu():
         image_pendu = images_pendu[echecs]
         for event in pygame.event.get():
 
-            clock.tick(30)
     
             if event.type == pygame.QUIT:
                 status = False
