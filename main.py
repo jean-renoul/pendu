@@ -177,13 +177,13 @@ def jeu():
         text_surf = font.render(text, True, (255, 0, 0))
         
         screen.fill ((255, 255, 255))
-        screen.blit (texte_1, (0,300))
-        screen.blit (texte_2, (300,100))
+        screen.blit (texte_1, (50,150))
+        screen.blit (texte_2, (350,50))
         screen.blit (texte_3, (250,450))
         screen.blit (texte_4, (250,500))
-        screen.blit (texte_5, (0,550))
-        screen.blit(image_pendu, (0, 0))
-        screen.blit (text_surf, (0, 350))
+        screen.blit (texte_5, (50,550))
+        screen.blit(image_pendu, (300, 300))
+        screen.blit (text_surf, (50, 600))
         
         pygame.display.flip()
 
