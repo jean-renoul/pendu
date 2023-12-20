@@ -47,3 +47,4 @@ wagon
 tigre
 bienvenue
 poule
+malade

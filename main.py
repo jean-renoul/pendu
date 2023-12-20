@@ -1,14 +1,23 @@
 import pygame
 import pygame_menu
 import random
+
+# Initialisation de Pygame
 pygame.init()
+
+# Dimensions de la fenêtre
 X = 800
 Y = 800
+
+# Création de la fenêtre
 screen = pygame.display.set_mode((X, Y))
 pygame.display.set_caption('pendu')
 clock = pygame.time.Clock()
 
-font = pygame.font.SysFont ('arial', 30)
+# Paramètres de police
+font = pygame.font.SysFont('arial', 30)
+
+# Variables globales
 text = ""
 essai = ""
 echecs = 0
@@ -18,46 +27,48 @@ scores = 0
 mots = []
 mot_a_ajouter = ''
 image_pendu = pygame.image.load("images\\pendu_0.png")
-texte_3 = font.render ("Vous avez gagné !", True, (255,255,255))
-texte_4 = font.render ("Vous avez perdu ...", True, (255,255,255))
+texte_3 = font.render("Vous avez gagné !", True, (255, 255, 255))
+texte_4 = font.render("Vous avez perdu ...", True, (255, 255, 255))
 
-
-
-images_pendu = [pygame.image.load("images\\pendu_0.png"), pygame.image.load("images\\pendu_1.png"), pygame.image.load("images\\pendu_2.png"),
-                pygame.image.load("images\\pendu_3.png"), pygame.image.load("images\\pendu_4.png"), pygame.image.load("images\\pendu_5.png"),
+# Chargement des images du pendu
+images_pendu = [pygame.image.load("images\\pendu_0.png"), pygame.image.load("images\\pendu_1.png"),
+                pygame.image.load("images\\pendu_2.png"), pygame.image.load("images\\pendu_3.png"),
+                pygame.image.load("images\\pendu_4.png"), pygame.image.load("images\\pendu_5.png"),
                 pygame.image.load("images\\pendu_6.png")]
 
-
+# Fonction principale du menu
 def menu():
     global difficultee 
     global mot_a_ajouter
     global pseudo_input
     
-    menu = pygame_menu.Menu('Bienvenue', 800, 800, theme = pygame_menu.themes.THEME_BLUE)
+    # Création d'un menu avec Pygame Menu
+    menu = pygame_menu.Menu('Bienvenue', 800, 800, theme=pygame_menu.themes.THEME_DEFAULT)
     pseudo_input = menu.add.text_input('Pseudo :', default="")
     difficultee = menu.add.selector('Difficultée :', [('Facile', 1), ('Normale', 2), ('Difficile', 3)])
-    mot_a_ajouter = menu.add.text_input ('Entrez un mot à ajouter : ')
-    menu.add.button ('Tableau des scores', scoreboard)
-    menu.add.button ('Jouer', jeu)
+    mot_a_ajouter = menu.add.text_input('Entrez un mot à ajouter : ')
+    menu.add.button('Tableau des scores', scoreboard)
+    menu.add.button('Jouer', jeu)
     menu.add.button('Quitter', pygame_menu.events.EXIT)
 
+    # Lancement du menu
     menu.mainloop(screen)
 
+# Ajouter un mot à la liste des mots
 def ajouter_mot():
     check = True
     mot_ajoute = mot_a_ajouter.get_value()
-    with open ("mots.txt", "a+") as f:
+    with open("mots.txt", "a+") as f:
         f.seek(0)
         lignes = f.readlines()
         for ligne in lignes:            
             if mot_ajoute == ligne.strip():
                 check = False
         if mot_ajoute != "" and check == True:            
-            f.write ("\n")
-            f.write (mot_ajoute)
-        
+            f.write("\n")
+            f.write(mot_ajoute)
 
-
+# Changer la difficulté en fonction du choix dans le menu
 def changer_difficultee():
     global mots
     global difficultee_selectionnee
@@ -84,7 +95,7 @@ def changer_difficultee():
                 if len(elements) >= 10:
                     mots.append(elements)
 
-
+# Enregistrer le score dans un fichier
 def fonction_score():
     pseudo = pseudo_input.get_value()
 
@@ -98,13 +109,14 @@ def fonction_score():
         with open('scores.txt', 'a+') as f:
             print (pseudo, ": ", scores + 3, file=f)
         
+# Afficher le tableau des scores
 def scoreboard():
     status = True
     while (status):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 status = False
-        with open ('scores.txt', 'r') as f:
+        with open('scores.txt', 'r') as f:
             scores = f.read().splitlines()
             scores = str(scores)
             texte_score = font.render (scores, True, (0,0,0))
@@ -112,7 +124,7 @@ def scoreboard():
         screen.blit (texte_score, (0, 50))
         pygame.display.flip()
 
-
+# Fonction principale du jeu
 def jeu():
     global essai
     global echecs
@@ -123,8 +135,8 @@ def jeu():
 
     ajouter_mot()
     changer_difficultee()
-    texte_3 = font.render ("Vous avez gagné !", True, (255,255,255))
-    texte_4 = font.render ("Vous avez perdu ...", True, (255,255,255))
+    texte_3 = font.render("Vous avez gagné !", True, (255,255,255))
+    texte_4 = font.render("Vous avez perdu ...", True, (255,255,255))
 
     mot_a_deviner = random.choice(mots)
     image_pendu = pygame.image.load("images\\pendu_0.png")
@@ -166,28 +178,30 @@ def jeu():
                 display_word = mot_a_deviner
                 
             elif "_ " not in display_word:
-                texte_3 = font.render ("Vous avez gagné !", True, (0,0,0))
+                texte_3 = font.render("Vous avez gagné !", True, (0,0,0))
                 essai = ""
                 echecs = 0
                 fonction_score()
 
-        texte_1 = font.render ("Entrez une lettre : ", True, (0,0,0))
-        texte_2 = font.render (display_word, True,(0,0,0) )
-        texte_5 = font.render (("Lettres essayées : " + essai + " "), True, (0,0,0))        
+        texte_1 = font.render("Entrez une lettre : ", True, (0,0,0))
+        texte_2 = font.render(display_word, True,(0,0,0) )
+        texte_5 = font.render(("Lettres essayées : " + essai + " "), True, (0,0,0))        
         text_surf = font.render(text, True, (255, 0, 0))
         
-        screen.fill ((255, 255, 255))
-        screen.blit (texte_1, (50,150))
-        screen.blit (texte_2, (350,50))
-        screen.blit (texte_3, (250,450))
-        screen.blit (texte_4, (250,500))
-        screen.blit (texte_5, (50,550))
+        screen.fill((255, 255, 255))
+        screen.blit(texte_1, (50,150))
+        screen.blit(texte_2, (350,50))
+        screen.blit(texte_3, (250,500))
+        screen.blit(texte_4, (250,550))
+        screen.blit(texte_5, (50,600))
         screen.blit(image_pendu, (300, 300))
-        screen.blit (text_surf, (50, 600))
+        screen.blit(text_surf, (50, 650))
         
         pygame.display.flip()
 
-menu ()
-print (scores)
+# Lancement du menu
+menu()
+print(scores)
 
+# Fermeture de Pygame
 pygame.quit()
